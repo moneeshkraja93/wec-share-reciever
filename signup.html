@@ -1,0 +1,95 @@
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<link rel="stylesheet" href="style3.css">
+		<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+		<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+		<title>Register</title>
+	</head>
+	<body>
+		<body>
+		<div class="wrapper">
+		<form id="MainForm">
+			<h1>Sign Up</h1>
+			<div class="input-box">
+				<select aria-label="State" name="Hospital Name" id="hospitalInp">
+					<option value="" disabled selected>Enter Hospital Name</option>
+  					<option value="PMCH Hospitals">PMCH Hospitals</option>
+  					<option value="B.S.G Hospitals">B.S.G Hospitals</option>
+  					<option value="HGH Hospitals">HGH Hospitals</option>
+  					<option value="Aims Hospital">Aims Hospital</option>
+				</select>
+				
+			</div>
+
+			<div class="input-box">
+				<input type="email" placeholder="Email ID" id="emailInp" required>
+				<i class='bx bxs-envelope'></i>
+			</div>
+			<div class="input-box">
+				<input type="password" placeholder="Password" id="passwordInp"required>
+				<i class='bx bxs-lock-alt'></i>
+			</div>
+			
+			<button type="submit" class="btn1">Create New User</button>
+			<a href="signin.html"><button type="button" class="btn2">Sign In</button></a>
+
+		</form>
+		<script type="module">
+  			
+  			import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+			import { getDatabase, set , ref } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+			import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+ 			import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
+  			// TODO: Add SDKs for Firebase products that you want to use
+  			// https://firebase.google.com/docs/web/setup#available-libraries
+
+  			// Your web app's Firebase configuration
+  			// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  			const firebaseConfig = {
+  					apiKey: "AIzaSyCBz71guPcPCaPTl4giB0KKHwAbflGeOEw",
+  					authDomain: "login-final-project-502e3.firebaseapp.com",
+  					databaseURL: "https://login-final-project-502e3-default-rtdb.firebaseio.com",
+  					projectId: "login-final-project-502e3",
+  					storageBucket: "login-final-project-502e3.appspot.com",
+  					messagingSenderId: "178356322399",
+  					appId: "1:178356322399:web:c64e74dc28f638a261dbea",
+  					measurementId: "G-LJJ89BZMMM"
+			};
+
+  			// Initialize Firebase
+  			const app = initializeApp(firebaseConfig);
+			const db = getDatabase();
+			const auth = getAuth(app);
+  			const analytics = getAnalytics(app);
+
+			let EmailInp = document.getElementById('emailInp');
+			let PassInp = document.getElementById('passwordInp');
+			let HospitalInp = document.getElementById('hospitalInp');
+			let MainForm = document.getElementById('MainForm');
+			let RegisterUser = evt =>{
+				evt.preventDefault();
+
+				createUserWithEmailAndPassword(auth, EmailInp.value, PassInp.value)
+				.then((credentials)=>{
+					console.log(credentials);
+					set(ref(db, 'UsersAuthList/' + credentials.user.uid),{
+						hospname: HospitalInp.value
+							
+					})
+					alert("Registered Successful");
+					window.location.href='signin.html'
+				})
+				.catch((error) =>{
+					alert(error.message);
+					console.log(error.code);
+					console.log(error.message);
+				})
+			}
+			MainForm.addEventListener('submit',RegisterUser);
+		</script>
+	
+	</body>
+</html>
